@@ -1,4 +1,4 @@
-## Synopsis
+## Description
 
 The simple jQuery plugin for making the responsive table. This plugin generates the new tables from each row of your table.
 Currently, this plugin  works only with simple tables. Most likely in the future, we will add the supports for difficult tables.
