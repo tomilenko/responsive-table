@@ -1,0 +1,24 @@
+.resptable {
+  border: 1px solid #000000;
+  margin: 10px;
+  width: 400px;
+  border-collapse: collapse;
+}
+
+.resptable tr:hover {
+  background-color: #c9c9c9;
+}
+
+.resptable thead tr {
+  background-color: #c9c9c9;
+}
+
+.resptable tbody tr td {
+  border-bottom: 1px solid #c9c9c9
+}
+
+
+.resptable-title {
+  font-weight: bold;
+  width: 50%
+}
