@@ -1,13 +1,19 @@
+/*
+Author: Vadim Tomilenko
+Author email: tomilenko.vadim@gmail.com
+Version: 0.1
+*/
+
 ;(function($) {
     $.fn.responsiveTable = function(customOptions) {
         var self = this;
 
         // init options
         var options = {
-            id: 'resptable',
             class: 'resptable',
-            width: 600,
-            removeOldTable: false
+            width: 800,
+            removeOldTable: false,
+            titleClass: 'resptable-title'
         };
 
         // update the options if needed
@@ -18,33 +24,48 @@
         }
 
         if (this.length) {
-            var tableId = this.attr('id');
+            var table = this.selector;
+            var tableHead = $(table).find('th');
 
-            var tableArray = $.map(this.find('th:not(:first)'), function(element, index) {
-                return [[$(element).text(), self.find('td:eq(' + index + ')').text()]]
-            });
+            var tableArray = $(table).find('tr').map(function() {
+                return [$("td", this).map(function() {
+                    return $(this).text();
+                }).get()];
+            }).get();
 
-            if (tableArray.length) {
-                var content = '';
+            if (window.innerWidth <= options.width) {
+                if (tableArray.length) {
+                    var tableStart = '<table class="' + options.class + '">'
+                    var tableEnd = '</table>';
+                    var content = tableStart;
 
-                var tableStart = '<table id="' + options.id + '" class="' + options.class + '">'
-                var tableEnd = '</table>';
+                    $.each(tableArray, function(index, value) {
+                        if (value.length) {
+                            var tableHeadTitle = "<thead><tr><th colspan='2'>" + "#" + index + "</th></tr></thead>";
+                            var currentTable = tableStart + tableHeadTitle;
+                            $.each(value, function(i,v) {
+                                currentTable += '<tr>'
+                                  + '<td class=' + options.titleClass + '>' + tableHead[i].innerText + '</td>'
+                                  + '<td>' + v + '</td>'
+                                  + '</tr>';
+                            })
+                            currentTable += tableEnd;
 
-                $.each(tableArray, function(index, value) {
-                    var currentTable = '';
-                    $.each(value, function(i,v) {
-                        currentTable += '<td>' + v + '</td>';
-                    })
+                            var generatedTables = $('.' + options.class);
+                            if (generatedTables.length) {
+                                generatedTables.last().after(currentTable);
+                            } else {
+                                self.after(currentTable);
+                            }
+                        }
+                    });
+                }
 
-                    content += '<tr>' + currentTable + '</tr>';
-
-                });
-
-                this.after(content);
-            }
-
-            if (options.removeOldTable) {
-                this.remove();
+                if (options.removeOldTable) {
+                    this.remove();
+                }
+            } else {
+                console.log('ResponsiveTable: Window width bigger than needed');
             }
         } else {
             console.log('ResponsiveTable: Expected table is not exist!');
